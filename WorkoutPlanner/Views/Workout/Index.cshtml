@@ -1,0 +1,42 @@
+@model IEnumerable<WorkoutPlanner.Models.Workout>
+
+<div class="workout-container">
+    <h1>Your Workouts</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Workouts Name</th>
+                <th>Day</th>
+                <th>Sets</th>
+                <th>Reps</th>
+                <th>Weight</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var workout in Model)
+            {
+                <tr>
+                    <td>@workout.Name</td>
+                    <td>@workout.Day.ToShortDateString()</td>
+                    <td>@workout.Sets</td>
+                    <td>@workout.Reps</td>
+                    <td>@workout.Weight</td>
+                    <td class="action-buttons">
+                        <a asp-action="Edit" asp-route-id="@workout.Id" class="btn btn-primary">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@workout.Id" class="=btn btn-danger">Delete</a>
+                        <form method="post" asp-action="AddToTodaysWorkouts" asp-route-workoutId="@workout.Id" style="display: inline;">
+                            <button type="submit" class="btn btn-success">Add To Todays Workout</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="action-buttons">
+        <a href="@Url.Action("Create")" class="btn btn-primary">Add New Workout</a>
+        <a href="@Url.Action("TodaysWorkouts")" class="btn btn-success">View Todays Workouts</a>
+    </div>
+</div>>

@@ -1,0 +1,31 @@
+@model IEnumerable<WorkoutPlanner.Models.WorkoutHistory>
+
+<div class="workout-container">
+    <h1>Workout Details - @Model.FirstOrDefault()?.Date.ToString("MMMM dd, yyyy")</h1>
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Workout</th>
+                <th>Sets</th>
+                <th>Reps</th>
+                <th>Weight</th>
+                <th>Notes</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var workout in Model)
+            {
+                <tr>
+                    <td>@workout.Workout.Name</td>
+                    <td>@workout.SetsCompleted</td>
+                    <td>@workout.RepsCompleted</td>
+                    <td>@workout.WeightUsed</td>
+                    <td>@workout.Notes</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    
+    <a href="@Url.Action("History")" class="btn btn-primary">Back to History</a>
+</div>

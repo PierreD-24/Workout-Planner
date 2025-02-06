@@ -1,0 +1,20 @@
+@model IEnumerable<WorkoutHistory>
+
+<div class="workout-container">
+    <h1>Workout History</h1>
+    
+    <div class="history-list">
+        @foreach (var dateGroup in Model.GroupBy(h => h.Date.Date).OrderByDescending(g => g.Key))
+        {
+            <div class="history-date-card">
+                <a href="@Url.Action("HistoryDetail", "Workout", new { date = dateGroup.Key.ToString("yyyy-MM-dd") })" 
+                   class="history-date-link">
+                    <div class="date-header">
+                        <h3>@dateGroup.Key.ToString("MMMM dd, yyyy")</h3>
+                        <span class="workout-count">@dateGroup.Count() workouts</span>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+</div>

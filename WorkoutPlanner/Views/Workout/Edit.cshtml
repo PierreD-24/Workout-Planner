@@ -1,0 +1,39 @@
+@model WorkoutPlanner.Models.Workout
+@{
+    ViewData["Title"] = "Edit Workout";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-3">
+    <label asp-for="Name" class="form-label"></label>
+    <input asp-for="Name" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Day" class="form-label"></label>
+        <input asp-for="Day" class="form-control" type="date" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Sets" class="form-label"></label>
+        <input asp-for="Sets" class="form-control" type="number" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Reps" class="form-label"></label>
+        <input asp-for="Reps" class="form-control" type="number" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Weight" class="form-label"></label>
+        <input asp-for="Weight" class="form-control" type="number" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

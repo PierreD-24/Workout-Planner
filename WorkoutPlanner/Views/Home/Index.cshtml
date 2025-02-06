@@ -1,0 +1,30 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="home-hero">
+    <h1>Transform Your Fitness Journey</h1>
+    <p class="lead">Track, plan, and achieve your workout goals with WorkoutPlanner</p>
+    @if (!User.Identity.IsAuthenticated)
+    {
+        <div class="mt-4">
+            <a asp-controller="User" asp-action="Register" class="btn btn-primary btn-lg mx-2">Get Started</a>
+            <a asp-controller="User" asp-action="Login" class="btn btn-outline-light btn-lg mx-2">Login</a>
+        </div>
+    }
+</div>
+
+<div class="home-features">
+    <div class="workout-card">
+        <h3>Track Workouts</h3>
+        <p>Log your exercises, sets, reps, and weights with ease.</p>
+    </div>
+    <div class="workout-card">
+        <h3>Daily Planning</h3>
+        <p>Organize your workouts and plan your fitness routine.</p>
+    </div>
+    <div class="workout-card">
+        <h3>Progress Monitoring</h3>
+        <p>Watch your improvements and stay motivated.</p>
+    </div>
+</div>

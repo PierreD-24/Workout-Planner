@@ -1,0 +1,33 @@
+
+@model WorkoutPlanner.Models.Workout
+@{
+    ViewData["Title"] = "Delete Workout";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div>
+    <h3><Area> you sure you want to delete this workout?</Area></h3>
+
+    <div>
+        <strong>Name:</strong> @Model.Name
+    </div>
+    <div>
+        <strong>Day:</strong> @Model.Day.ToShortDateString()
+    </div>
+    <div>
+        <strong>Sets:</strong> @Model.Sets
+    </div>
+    <div>
+        <strong>Reps:</strong> @Model.Reps
+    </div>
+    <div>
+        <strong>Weight:</strong> @Model.Weight
+    </div>
+</div>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="=submit" class="btn btn-danger">Delete</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

@@ -1,0 +1,43 @@
+@model IEnumerable<WorkoutPlanner.Models.Workout>
+
+<h1>Today's Workouts</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Workout Name</th>
+            <th>Day</th>
+            <th>Sets</th>
+            <th>Reps</th>
+            <th>Weight</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var workout in Model)
+        {
+            <tr>
+                <td>@workout.Name</td>
+                <td>@workout.Day.ToShortDateString()</td>
+                <td>@workout.Sets</td>
+                <td>@workout.Reps</td>
+                <td>@workout.Weight</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@workout.Id"
+                        asp-route-returnUrl="@Url.Action("TodaysWorkouts")">Edit</a>
+                </td>
+                <td>
+                    <form asp-action="RemoveFromTodaysWorkouts" asp-route-id="@workout.Id" method="post"
+                        style="display: inline;">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-danger">Remove</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<form asp-action="SaveWorkoutHistory" method="post" class="mt-4">
+    <button type="submit" class="btn btn-success">Save Today's Workout</button>
+</form>

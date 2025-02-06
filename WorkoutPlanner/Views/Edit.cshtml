@@ -1,0 +1,31 @@
+@model WorkoutPlanner.Models.Workout
+
+<h1>Edit Workout</h1>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group">
+        <label asp-for="Name">Workout Name</label>
+        <input type="text" class="form-control" asp-for="Name" required />
+    </div>
+
+      <div class="form-group">
+        <label asp-for="Sets">Sets</label>
+        <input type="number" class="form-control" asp-for="Sets" required />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Reps">Reps</label>
+        <input type="number" class="form-control" asp-for="Reps" required />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Weight">Weight</label>
+        <input type="number" class="form-control" asp-for="Weight" required />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+</form>
+
+<a href="@Url.Action("Index")" class="btn btn-secondary mt-3">Cancel</a>
