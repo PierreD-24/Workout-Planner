@@ -15,16 +15,30 @@ namespace WorkoutPlanner.Controllers
     {
         private readonly WorkoutRepository _workoutRepository;
 
-        // Constructor to inject the workout repository
+        /// <summary>
+        /// Constructor for WorkoutController, initializes workout repository
+        /// </summary>
+        /// <param name="workoutRepository">Repository for handling workout data operations</param>
+
         public WorkoutController(WorkoutRepository workoutRepository)
         {
             _workoutRepository = workoutRepository;
         }
 
-        // Action to display all workouts
-        public async Task<IActionResult> Index()
+
+        /// <summary>
+        /// Displays List of workouts with optional search functionality
+        /// </summary>
+        /// <param name="searchString">Optional search term to filter workouts</param>
+        /// <returns>View containing filtered or all workouts</returns>
+        public async Task<IActionResult> Index(string? searchString = null)
         {
-            var workouts = await _workoutRepository.GetAllWorkoutsAsync();
+            ViewData["CurrentFilter"] = searchString;
+
+            var workouts = string.IsNullOrEmpty(searchString)
+                ? await _workoutRepository.GetAllWorkoutsAsync()
+                : await _workoutRepository.SearchWorkoutAsync(searchString);
+
             return View(workouts);
         }
 
@@ -58,7 +72,12 @@ namespace WorkoutPlanner.Controllers
             return View(workout);
         }
 
-        // GET workout
+        /// <summary>
+        /// Displays edit form for workout with option to return to previous page
+        /// </summary>
+        /// <param name="id">ID of workout to edit</param>
+        /// <param name="returnUrl">URL to return to after edit</param>
+        /// <returns>Edit view for specified workout</returns>
         public async Task<IActionResult> Edit(int id, string returnUrl)
         {
             var workout = await _workoutRepository.GetWorkoutByIdAsync(id);
@@ -71,10 +90,17 @@ namespace WorkoutPlanner.Controllers
             return View(workout);
         }
 
-        // POST Workout
+        /// <summary>
+        /// Processes the workout edit form submission
+        /// </summary>
+        /// <param name="id">ID of workout to edit</param>
+        /// <param name="workout">Updated workout data</param>
+        /// <param name="returnUrl">URL to return to after edit</param>
+        /// <returns>Redirects to return URL or Today's Workouts if successful</returns>
         [HttpPost]
         public async Task<IActionResult> Edit(int id, Workout workout, string returnUrl)
         {
+            // Verify the ID in route matches the workout object
             if (id != workout.Id)
             {
                 return BadRequest("Workout ID mismatch.");
@@ -82,11 +108,13 @@ namespace WorkoutPlanner.Controllers
 
             if (!ModelState.IsValid)
             {
+                // Log validation errors for debugging
                 foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
                 {
                     Console.WriteLine($"Validation Error: {error.ErrorMessage}");
                 }
 
+                // Return to edit form with current values if validation fails
                 ViewData["ReturnUrl"] = returnUrl ?? Url.Action("Index");
                 return View(workout);
             }
@@ -135,6 +163,10 @@ namespace WorkoutPlanner.Controllers
             return RedirectToAction("Index");
         }
 
+        /// <summary>
+        /// Shows today's selected workouts for logged in user
+        /// </summary>
+        /// <returns>View containing user's workouts for today</returns>
         public async Task<IActionResult> TodaysWorkouts()
         {
             var userId = GetLoggedInUserId();
@@ -143,9 +175,15 @@ namespace WorkoutPlanner.Controllers
         }
 
 
+        /// <summary>
+        /// Adds a workout to user's today's workout list
+        /// </summary>
+        /// <param name="workoutId">ID of workout to add</param>
+        /// <returns>Redirects to Today's Workouts page</returns>
         [HttpPost]
         public async Task<IActionResult> AddToTodaysWorkouts(int workoutId)
         {
+            // Get user ID from session, redirect to login if not found
             var userId = HttpContext.Session.GetString("UserId");
 
             if (string.IsNullOrEmpty(userId))
@@ -153,6 +191,7 @@ namespace WorkoutPlanner.Controllers
                 return RedirectToAction("Login", "User");
             }
 
+            // Verify workout exists before adding
             var workout = await _workoutRepository.GetWorkoutByIdAsync(workoutId);
 
             if (workout != null)
@@ -162,10 +201,15 @@ namespace WorkoutPlanner.Controllers
                 return RedirectToAction("TodaysWorkouts");
             }
 
-            return NotFound();
+            return NotFound(); // Return 404 if workout doesn't exist
         }
 
 
+        /// <summary>
+        /// Removes a workout from user's today's workout list without deleting it from the database
+        /// </summary>
+        /// <param name="id">ID of workout to remove</param>
+        /// <returns>Redirects to Today's Workouts page</returns>
         [HttpPost]
         public async Task<IActionResult> RemoveFromTodaysWorkouts(int id)
         {
@@ -214,17 +258,25 @@ namespace WorkoutPlanner.Controllers
             return RedirectToAction("History");
         }
 
+
+        /// <summary>
+        /// Saves current workout routine to workout history
+        /// </summary>
+        /// <returns>Redirects to History page after saving</returns>
         [HttpPost]
         public async Task<IActionResult> SaveWorkoutHistory()
         {
             try
             {
                 var userId = GetLoggedInUserId();
+                //Get all workouts currently in user's today's workout list
                 var todaysWorkouts = await _workoutRepository.GetTodaysWorkoutsAsync(userId);
                 var today = DateTime.Now;
 
+                // Delete any existing history entries for today to prevent duplicates
                 await _workoutRepository.DeleteWorkoutHistoryForDateAsync(userId, today);
 
+                // Create history entries for each workout in today's list
                 foreach (var workout in todaysWorkouts)
                 {
                     var history = new WorkoutHistory
@@ -244,6 +296,7 @@ namespace WorkoutPlanner.Controllers
             }
             catch (Exception ex)
             {
+                // Log error and redirect to prevent user from seeing error in details
                 Console.WriteLine($"Error saving workout history: {ex.Message}");
                 TempData["Error"] = "There was an error saving your workout history.";
                 return RedirectToAction("History");

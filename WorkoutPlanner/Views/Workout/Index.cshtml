@@ -3,6 +3,17 @@
 <div class="workout-container">
     <h1>Your Workouts</h1>
 
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <form asp-action="Index" method="get" class="d-flex">
+                <input type="text" name="searchString" class="form-control me-2"
+                        placeholder="Search workouts..." value="@ViewData["CurrentFilter"]" />
+                <button type="submit" class="btn btn-primary">Search</button>
+                <a asp-action="Index" class="btn btn-secondary ms-2">Clear</a>
+            </form>
+        </div>
+    </div>
+
     <table class="table">
         <thead>
             <tr>

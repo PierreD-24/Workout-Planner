@@ -117,6 +117,12 @@ namespace WorkoutPlanner.Repositories
             return await _connection.QueryAsync<WorkoutHistory>(query, new { UserId = userId });
         }
 
+        /// <summary>
+        /// Retrieves workout history for a specific date
+        /// </summary>
+        /// <param name="userId">ID of the user</param>
+        /// <param name="date">Date to retieve history for</param>
+        /// <returns>Collection of workout history entries with associated workout details</returns>
         public async Task<IEnumerable<WorkoutHistory>> GetWorkoutHistoryByDateAsync(int userId, DateTime date)
         {
             string query = @"
@@ -156,6 +162,19 @@ namespace WorkoutPlanner.Repositories
         AND DATE(Date) = DATE(@Date)";
 
             await _connection.ExecuteAsync(query, new { UserId = userId, Date = date });
+        }
+
+        public async Task<IEnumerable<Workout>> SearchWorkoutAsync(string searchString)
+        {
+            string query = @"
+                SELECT *
+                FROM Workouts
+                WHERE Name LIKE CONCAT('%', @SearchString, '%')";
+
+            return await _connection.QueryAsync<Workout>(
+                query,
+                new { SearchString = searchString ?? "" }
+            );
         }
 
     }
