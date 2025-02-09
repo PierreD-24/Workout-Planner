@@ -4,13 +4,21 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using WorkoutPlanner.Models;
 
+
 namespace WorkoutPlanner.Repositories
 {
+    /// <summary>
+    /// Repository handling all database operations for workouts, including tracking, history, and user assistance
+    /// </summary>
     public class WorkoutRepository
     {
         private readonly MySqlConnection _connection;
 
-        // Constructor to inject MySQL connection
+        /// <summary>
+        /// Initializes repository with database connection
+        /// </summary>
+        /// <param name="connection">MySQL database connection</param>
+        /// <exception cref="ArgumentNullException">Thrown when connection is null</exception>
         public WorkoutRepository(MySqlConnection connection)
         {
             _connection = connection ?? throw new ArgumentNullException(nameof(connection));
@@ -19,7 +27,7 @@ namespace WorkoutPlanner.Repositories
         // Method to get all workouts from the database
         public async Task<IEnumerable<Workout>> GetAllWorkoutsAsync()
         {
-            string query = "SELECT * FROM Workouts"; // Make sure the table name is correct
+            string query = "SELECT * FROM Workouts";
             return await _connection.QueryAsync<Workout>(query);
         }
 
@@ -133,6 +141,7 @@ namespace WorkoutPlanner.Repositories
                             AND DATE(h.Date) = DATE(@Date)
                             ORDER BY h.Date";
 
+            //Dictionary to prevent duplicate entries
             var workoutDictionary = new Dictionary<int, WorkoutHistory>();
 
             var result = await _connection.QueryAsync<WorkoutHistory, Workout, WorkoutHistory>(

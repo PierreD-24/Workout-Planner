@@ -13,25 +13,43 @@ using Microsoft.AspNetCore.Authentication;
 
 namespace WorkoutPlanner.Controllers
 {
+    /// <summary>
+    /// Controller handling all user-related operations including authentication and account management
+    /// </summary>
     public class UserController : Controller
     {
         private readonly IUserRepository _userRepository;
 
+        /// <summary>
+        /// Initializes controller with user repository
+        /// </summary>
+        /// <param name="userRepository">Repository for user data operations</param>
         public UserController(IUserRepository userRepository)
         {
             _userRepository = userRepository;
         }
 
+        /// <summary>
+        /// Displays user registration form
+        /// </summary>
+        /// <returns>Registration view</returns>
         public IActionResult Register()
         {
             return View();
         }
 
+        /// <summary>
+        /// Processes user registration form submission
+        /// </summary>
+        /// <param name="user">User registration data</param>
+        /// <param name="password">User's plain text password</param>
+        /// <returns>Redirects to home page on success, returns to form if validation failed</returns>
         [HttpPost]
         public async Task<IActionResult> Register(User user, string password)
         {
             if (ModelState.IsValid)
             {
+                // Hash password and set creation timestamp
                 user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(password);
                 user.CreatedAt = DateTime.Now;
 
@@ -47,11 +65,21 @@ namespace WorkoutPlanner.Controllers
             return BCrypt.Net.BCrypt.HashPassword(password); // Hash password with BCrypt
         }
 
+        /// <summary>
+        /// Display Login form
+        /// </summary>
+        /// <returns>Login view</returns>
         public IActionResult Login()
         {
             return View(new LoginViewModel());
         }
 
+
+        /// <summary>
+        /// Processes user login attempt
+        /// </summary>
+        /// <param name="model">Login credentials</param>
+        /// <returns>Redirects to home page on success, returns to with an error on failure</returns>
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
@@ -76,7 +104,7 @@ namespace WorkoutPlanner.Controllers
                         new ClaimsPrincipal(claimsIdentity),
                         authProperties);
 
-                    // Also set session (if you're using both)
+                    // Set session data
                     HttpContext.Session.SetString("UserId", user.Id.ToString());
                     HttpContext.Session.SetString("Username", user.Username);
 
@@ -90,11 +118,17 @@ namespace WorkoutPlanner.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Processes user Logout request
+        /// </summary>
+        /// <returns>Redirects to home page after signing out</returns>
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
+            // Clear authentication
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
+            //Clear session
             HttpContext.Session.Clear();
 
             return RedirectToAction("Index", "Home");
