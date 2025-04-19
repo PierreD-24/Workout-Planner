@@ -3,6 +3,14 @@
 <div class="workout-container">
     <h1>Your Workouts</h1>
 
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissable fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
     <div class="row mb-3">
         <div class="col-md-6">
             <form asp-action="Index" method="get" class="d-flex">

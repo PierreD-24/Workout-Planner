@@ -159,7 +159,13 @@ namespace WorkoutPlanner.Controllers
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _workoutRepository.DeleteWorkoutAsync(id);
+            var result = await _workoutRepository.DeleteWorkoutAsync(id);
+
+            if (!result.Success)
+            {
+                TempData["ErrorMessage"] = result.ErrorMessage;
+            }
+            
             return RedirectToAction("Index");
         }
 

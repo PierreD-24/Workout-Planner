@@ -59,10 +59,22 @@ namespace WorkoutPlanner.Repositories
 
 
         // Delete a workout by Id
-        public async Task DeleteWorkoutAsync(int id)
+        public async Task<(bool Success, string ErrorMessage)> DeleteWorkoutAsync(int id)
         {
-            string query = "DELETE FROM Workouts WHERE Id = @Id";
-            await _connection.ExecuteAsync(query, new { Id = id });
+            try
+            {
+                string deleteQuery = "DELETE FROM Workouts Where Id = @Id";
+                await _connection.ExecuteAsync(deleteQuery, new { id = id });
+                return (true, null);
+            }
+            catch (MySqlException ex)
+            {
+                if (ex.Message.Contains("foreign key constraint fails"))
+                {
+                    return (false, "Cannot delete this workout as it exists in your workout history. Delete the history entries first or keep this workout.");
+                }
+                return (false, "An error occured while deleting this workout.");
+            }
         }
 
         // Get workouts by a specific date
