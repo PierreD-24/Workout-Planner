@@ -12,6 +12,10 @@ a[b-e2813ydexj] {
   color: #0077cc;
 }
 
+body[b-e2813ydexj] {
+  margin-bottom: 60px;
+}
+
 .btn-primary[b-e2813ydexj] {
   color: #fff;
   background-color: #1b6ec2;
@@ -40,10 +44,24 @@ button.accept-policy[b-e2813ydexj] {
   line-height: inherit;
 }
 
+.container[b-e2813ydexj] {
+  flex:  1 0 auto;
+}
+
 .footer[b-e2813ydexj] {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   width: 100%;
-  white-space: nowrap;
-  line-height: 60px;
+  height: 60px;
+  border-top: 1px solid #ddd;
+  z-index: 1000;
+}
+
+html[b-e2813ydexj], body[b-e2813ydexj] {
+  height: 100%;
+  margin: 0;
+}
+
+main[b-e2813ydexj] {
+  padding-bottom: 80px;
 }

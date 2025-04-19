@@ -30,6 +30,7 @@ builder.Services.AddSession(options =>
 // Register WorkoutRepository and UserRepository
 builder.Services.AddScoped<WorkoutRepository>(); // Scoped to request
 builder.Services.AddScoped<IUserRepository, UserRepository>(); // Register IUserRepository
+builder.Services.AddScoped<ProgressRepository>();
 
 // Register MySQL connection
 builder.Services.AddScoped<MySqlConnection>(provider =>
