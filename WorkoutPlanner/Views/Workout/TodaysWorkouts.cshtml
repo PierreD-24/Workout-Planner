@@ -2,15 +2,15 @@
 
 <h1>Today's Workouts</h1>
 
-<table class="table">
-    <thead>
+<table class="table table-bordered">
+    <thead class="table-primary">
         <tr>
-            <th>Workout Name</th>
-            <th>Day</th>
-            <th>Sets</th>
-            <th>Reps</th>
-            <th>Weight</th>
-            <th>Actions</th>
+            <th style="width: 25%">Workout Name</th>
+            <th style="width: 15%">Day</th>
+            <th style="width: 10%">Sets</th>
+            <th style="width: 10%">Reps</th>
+            <th style="width: 15%">Weight</th>
+            <th style="width: 12.5%" colspan="2">Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -22,11 +22,11 @@
                 <td>@workout.Sets</td>
                 <td>@workout.Reps</td>
                 <td>@workout.Weight</td>
-                <td>
+                <td style="width: 12.5%">
                     <a asp-action="Edit" asp-route-id="@workout.Id"
                         asp-route-returnUrl="@Url.Action("TodaysWorkouts")">Edit</a>
                 </td>
-                <td>
+                <td style="width: 12.5%">
                     <form asp-action="RemoveFromTodaysWorkouts" asp-route-id="@workout.Id" method="post"
                         style="display: inline;">
                         @Html.AntiForgeryToken()
