@@ -7,10 +7,12 @@ using System;
 using System.Security.Claims;
 using MySql.Data.MySqlClient;
 using System.Data;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace WorkoutPlanner.Controllers
 {
+    [Authorize]
     public class WorkoutController : Controller
     {
         private readonly WorkoutRepository _workoutRepository;
@@ -165,7 +167,7 @@ namespace WorkoutPlanner.Controllers
             {
                 TempData["ErrorMessage"] = result.ErrorMessage;
             }
-            
+
             return RedirectToAction("Index");
         }
 

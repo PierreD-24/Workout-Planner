@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using WorkoutPlanner.Repositories;
 using WorkoutPlanner.Models;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WorkoutPlanner.Controllers
 {
+    [Authorize]
     public class ProgressController : Controller
     {
         private readonly ProgressRepository _progressRepository;
