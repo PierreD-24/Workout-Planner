@@ -10,6 +10,7 @@ using BCrypt.Net;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WorkoutPlanner.Controllers
 {
@@ -122,6 +123,7 @@ namespace WorkoutPlanner.Controllers
         /// Processes user Logout request
         /// </summary>
         /// <returns>Redirects to home page after signing out</returns>
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
